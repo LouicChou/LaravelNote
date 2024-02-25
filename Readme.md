@@ -63,7 +63,7 @@ Laragon中點右鍵>PHP>www，可看到所有建立的專案
 
 常用命令:
 - "php artisan serve" - 查看laragon伺服器的狀態與ip跟port，8000是laragon的預設PORT
-- 所有命令後面加上"-h"就可以查看系土功能指令有哪些，譬如輸入"php artisan serve -h"
+- 所有命令後面加上"-h"就可以查看系統功能指令有哪些，譬如輸入"php artisan serve -h"
 - "php artisan route:list" - 顯示所有應用程式的路由列表
 - "php artisan tinker" - 進入php的即時運算功能，像是輸入"7 == "7"",會得到Ture的結果，輸入"strlen("ABCDE")"會得到5，可用來在網站運行中創建假數據測試之類的
 
