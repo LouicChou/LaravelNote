@@ -30,6 +30,8 @@ create new Project: Enter "laravel new [Project_Name]"
 ## open project
 Laragon中點右鍵>PHP>www，可看到所有建立的專案
 
+## 切換預設網站
+Laragon中點右鍵>第二個項目>Switch Document Root>Select another，選到index網頁的那個路徑，像是Laravel專案就是選[Public]資料夾
 ## folder structure
 - [app]
     - [http]    
@@ -49,7 +51,7 @@ Laragon中點右鍵>PHP>www，可看到所有建立的專案
     - [css]
     - [js]
     - [views] - 所有HTML程式都在放在這
-- [routes] - 所有陸游都放在這
+- [routes] - 所有路由都放在這
 - [storage] - 舊版本檔案?
 - [test] - 測試檔案可放在這
 - [vendor] - 所有laravel依賴庫(連結外部工具庫Libraries)
