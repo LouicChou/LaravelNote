@@ -197,3 +197,144 @@
 
     <h1>{{$about}}</h1>
     <h1>{{$about2}}</h1>
+
+### 使用樣板
+<p>完成檔案結構如下</p>
+
+![迴圈條件](img/useTemplateStructure.jpg)
+<p>在[views]創建home.blade.php檔案，內容輸入如下</p>
+
+    @extends('layouts.master') {{-- 主樣板 --}}
+
+    @section('content') {{-- master.blade.php中master.blade.php的內容 --}}
+        <main role="main" class="container">
+            <h1 class="mt-5 text-danger">Home</h1>
+            Lorem,ipsum dolor
+        </main>
+    @endsection
+
+<p>在[views]下建立資料夾[layouts]，再建立master.blade.php，程式碼內容如下</p>
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Home</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+        @include('layouts.header')
+            @yield('content')
+
+        @include('layouts.footer')
+    
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+    </body>
+    </html>
+
+<p>在[layouts]建立header.blade.php，程式碼內容如下</p>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <button class="navbar-togger" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupporedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">link</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    </nav>
+
+<p>在[layouts]建立footer.blade.php，程式碼內容如下</p>
+
+    <footer class="bg-light text-center text-lg-start" style="position: fixed; width: 100%; bottom:0;">
+    <div class="text-center p-3" style="background-color: rgba(0,0,0,0.2);">
+        <a class="text-dark" href="#">WebSolutionUs</a>
+    </div>
+</footer> 
+
+<p>在web.app建立一個指向home的Route，如下:</p>
+
+    Route::get('/home', function () {
+    return view('home');;
+    });
+
+### 使用Foreach帶出條件式內容
+<p>在Route帶入變數內容如下:</p>
+
+    Route::get('/home', function () {
+        $blogs = [
+            [
+                'title' => 'title one',
+                'body' => 'this is body text',
+                'status' => '1'
+            ],
+            [
+                'title' => 'title two',
+                'body' => 'this is body text',
+                'status' => '0'
+            ],
+            [
+                'title' => 'title three',
+                'body' => 'this is body text',
+                'status' => '1'
+            ],
+            [
+                'title' => 'title four',
+                'body' => 'this is body text',
+                'status' => '1'
+            ]
+        ];
+        return view('home', compact('blogs'));
+    });
+
+<p>在home.blase.php輸入程式碼如下:</p>
+
+    @extends('layouts.master') {{-- 主樣板 --}}
+
+    @section('content')
+    <main role="main" class="container">
+        <h1 class="mt-5 text-danger">Home</h1>
+        Lorem,ipsum dolor
+
+        <div class="row mt-5">
+            @foreach ($blogs as $blog)
+            @if ($blog['status'] == 1)
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>{{$blog['title']}}</h2>
+                            <p>{{$blog['body']}}</p>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>{{$blog['title']}}</h2>
+                            <p>{{$blog['body']}}</p>
+                            <div class="btn-sm btn-warning">Pending</div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+            @endforeach
+    </main>
+    @endsection
+
+<p>結果如下</p>
+
+![迴圈條件](img/foreachCondition.jpg)
