@@ -5,7 +5,7 @@
 
 ## Change PHP Version
 <p>PHP版本下載: https://windows.php.net/downloads/releases/</p>
-<p>將要換的PHP版本程式放在C:\laragon\www\之下，
+<p>將要換的PHP版本程式解壓縮後放在C:\laragon\bin\php之下，
 在Laragon程式中點右鍵>PHP，即可切換版本</p>
 
 
@@ -28,7 +28,7 @@
     create new Project: Enter "laravel new [Project_Name]"
 
 ## open project
-<p>Laragon中點右鍵>PHP>www，可看到所有建立的專案</p>
+<p>Laragon中點右鍵>www，可看到所有建立的專案</p>
 
 ## 切換預設網站
 <p>Laragon中點右鍵>第二個項目>Switch Document Root>Select another，選到index網頁的那個路徑，像是Laravel專案就是選[Public]資料夾</p>
