@@ -70,6 +70,12 @@
 - "php artisan route:list" - 顯示所有應用程式的路由列表
 - "php artisan tinker" - 進入php的即時運算功能，像是輸入"7 == "7"",會得到Ture的結果，輸入"strlen("ABCDE")"會得到5，可用來在網站運行中創建假數據測試之類的
 
+## Terminal指令
+### 查看所有Route
+
+    php artisan route:list
+
+
 ## VS code的PHP錯誤
 <p>錯誤訊息:</p> 
     Cannot validate since a PHP installation could not be found. Use the setting 'php.validate.executablePath' to configure the PHP executable.
@@ -338,3 +344,84 @@
 <p>結果如下</p>
 
 ![迴圈條件](img/foreachCondition.jpg)
+
+## Controller
+### Create controller
+<p>開啟Terminal後進入專案路徑
+
+![開啟Termital](img/openTerminal.jpg)
+![進入專案](img/intoProject.jpg)
+<p>輸入指令:</p>
+
+    php artisan make:controller HomeController
+
+![創建成功](img/createSuccessed.jpg)
+
+<p>單動作控制器</p>
+
+    php artisan make:controller HomeController --invokable
+
+<p>資源控制器</p>
+
+    php artisan make:controller HomeController -r
+
+## Use Token(使用csrf)
+### View內容
+- form元素屬性要加method="POST" action="{{ route('login.sumbit') }}" 
+- form元素下面那行要加一行@csrf
+- input元素都要加上name屬性
+
+
+        <div class="row mt-5 justify-content-center">
+            <div class="col-md-4">
+                <h2 class="mb-4">Login</h2>
+                <div class="card">
+                    <div class="card-body">
+                        <form action="{{ route('login.sumbit') }}" method="POST">
+                            @csrf
+                            <div class="mb-2">
+                                <label for="" class="form-label">User Name</label>
+                                <input name="name" type="text" class="form-control">
+                            </div>
+                            <div class="mb-2">
+                                <label for="" class="form-label">User Password</label>
+                                <input name="password" type="text" class="form-control">
+                            </div>
+                            <div class="mb-2">
+                                <label for="" class="form-label">User Email</label>
+                                <input name="email" type="email" class="form-control">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Sumbit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+### Controller內容
+- 參數要加入Request
+
+    namespace App\Http\Controllers;
+    use Illuminate\Http\Request;
+
+    class LoginController extends Controller
+    {
+        public function handleLogin(Request $req)
+        {
+            dd($req->all());
+        }
+    }
+
+### web.php
+- 新增一個跟View相同名稱的POST方法
+
+    Route::get('/login', [LoginController::class, 'index'])->name('login');
+
+    Route::post('/login', [LoginCon troller::class, 'handleLogin'])->name('login.sumbit');
+
+### app>Http>Middleware>VerifyCsrfToken.php
+<p>要確認內容為空
+
+![進入專案](img/VerifyCsrfTokenEmpty.jpg)
+
+## From驗證Validation
