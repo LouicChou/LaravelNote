@@ -365,7 +365,7 @@
 
     php artisan make:controller HomeController -r
 
-## Use Token(使用csrf)
+## 表單提交Use Token(使用csrf)
 ### View內容
 - form元素屬性要加method="POST" action="{{ route('login.sumbit') }}" 
 - form元素下面那行要加一行@csrf
@@ -399,7 +399,7 @@
         </div>
 
 ### Controller內容
-- 參數要加入Request
+- 參數要加入Request，此處為提交後回傳的內容
 
     namespace App\Http\Controllers;
     use Illuminate\Http\Request;
@@ -420,8 +420,331 @@
     Route::post('/login', [LoginCon troller::class, 'handleLogin'])->name('login.sumbit');
 
 ### app>Http>Middleware>VerifyCsrfToken.php
-<p>要確認內容為空
+<p>要確認內容為空</p>
 
 ![進入專案](img/VerifyCsrfTokenEmpty.jpg)
 
-## From驗證Validation
+## Form驗證Validation
+### 提交內容加validate
+
+    public function handleLogin(Request $req)
+    {
+        $req->validate([
+            // 多條件驗證:必填，只能是英文字元，至少六個字元
+            'name' => ['required', 'alpha', 'min:6', 'max:10'],
+            'password' => 'required',
+            'email' => ['required', 'email']
+        ]);
+
+        return $req;
+    }
+
+### View中在form元素前加入以下程式碼
+
+    {{-- 驗證有任何錯誤就出現提示 --}}
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    <div class="alert alert-danger">{{ $error }}</div>
+                @endforeach
+            @endif
+
+### 自定義驗證錯誤訊息
+<p>加上第二個[]參數</p>
+
+    {
+        $req->validate([
+            // 多條件驗證:必填，只能是英文字元，至少六個字元
+            'name' => ['required', 'alpha', 'min:6', 'max:10'],
+            'password' => 'required',
+            'email' => ['required', 'email']
+        ],[
+            'name.required' => 'The name field is required!!',
+            'name.alpha' => '只能是英文'
+        ]);
+
+        return $req;
+    }
+
+### 建立class製作驗證內容與自定義訊息
+- 新增request
+
+        php artisan make:request LoginRequest
+
+    <p>app>http多一個Request資料夾，下面多一個LoginRequest.php</p>
+
+- 將裡面的authorize方法內容由flase改成true
+- 將驗證項目跟自定義訊息都放到LoginRequest.php
+
+    <p>最後LoginRequest.php內容如下:
+
+        namespace App\Http\Requests;
+
+        Illuminate\Foundation\Http\FormRequest;
+
+        class LoginRequest extends FormRequest
+        {
+        /**
+        * Determine if the user is authorized to make this request.
+        */
+            public function authorize(): bool
+            {
+                return true;
+            }
+
+            /**
+            * Get the validation rules that apply to the request.
+            *
+            * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+            */
+            public function rules()
+            {
+                return [
+                    'name' => ['required', 'alpha', 'min:6'],
+                    'password' => 'required',
+                    'email' => ['required', 'email']
+                ];
+            }
+
+            public function messages()
+            {
+                return [
+                    'name.required' => 'The name field is required!!',
+                    'name.alpha' => '只能是英文'
+                ];
+            }
+        }
+
+    <p>LoginController.php內容如下
+
+        namespace App\Http\Controllers;
+
+        use App\Http\Requests\LoginRequest;
+
+        class LoginController extends Controller
+        {
+            public function index()
+            {
+                return view('login');
+            }
+
+            public function handleLogin(LoginRequest $req)
+            {
+                return $req;
+            }
+        }
+
+## Database
+- config>database.php中預設是使用mysql
+
+    ![database_default](img/database_default.jpg)
+
+- 在.env輸入資料庫資訊
+
+    ![db_connection](img/db_conntection.jpg)
+
+### 建立實例
+- Terminal輸入
+
+    php artisan tinker
+
+    ![tinker](img/tinker.jpg)
+
+- terminal輸入
+    DB::connection()->getPDO();
+
+    <p>得到mysql的實例</p>
+
+    ![getPDO](img/getPDO.jpg)
+
+### 建立Migration檔案方便遷移資料庫
+
+### 範例建立posts資料表(僅創php檔)
+- Terminal輸入
+
+    php artisan make:migration create_posts_table
+
+    <p>須以'create_'開頭，'_table'結束，忠鈿建議定義負數名稱(+s)
+
+- 可在database>migrations資料夾下看到新建的table.php
+
+    ![migration_newTable](img/migration_newTable.jpg)
+
+- 建立自定義欄位
+
+        public function up(): void
+        {
+            Schema::create('posts', function (Blueprint $table) {
+                $table->id();
+                $table->string('title');
+                $table->text('description');
+                $table->boolean('status');
+                $table->timestamps();
+            });
+        }
+
+
+    ![migration_newTable](img/defined_col.jpg)
+
+- terminal輸入:
+
+        php artisan migrate
+
+    <p>產生database>migrations內所有的資料表(其中有預設資料表)
+
+    ![migration_newTable](img/migrate_table.jpg)
+
+    <p>查看資料庫內容也會出現資料表</p>
+
+    ![newly_added_db](img/newly_added_db.jpg)
+
+- 更多資料類型與用法
+
+        $table->string('title', 100); // 255
+        $table->decimal('amount')->nullable(); // 可空白
+        $table->double('double')->default(0); // 預設值
+        $table->float('float');
+        $table->integer('integer');
+
+### 更多migration命令
+- 重置現有的資料庫(刪除所有資料表只剩下資料表migrations)
+
+        php artisan migrate:reset
+
+- 新增欄位(不會刪除舊資料)
+
+    * 新增一個要新增欄位的資料表同名的add table(以'add_'開頭，'_table'結尾)
+
+            php artisan make:migration add_posts_table --table=posts
+
+    ![add_col](img/add_col.jpg)
+
+    * 在這個add檔案加入要新增的欄位(因為已有舊資料在表內，所以新的欄位要加上nullable()或是default())
+
+    ![dd_col_defined](img/add_col_defined.jpg)
+
+    * 執行migrate
+
+            php artisan migrate
+
+
+
+- 新增欄位(<font color=#FF0000>**會刪除資料內容!!**</font> php artisan migrate只會新增目前沒有的資料表，不會新增資料表內的新欄位)
+
+        php artisan migrate:refresh
+
+- 回到上一次的資料庫狀態(可能新建的資料表會消失,不會復歸新增的欄位)
+
+        php artisan migrate:rollback
+
+- 只遷移單一資料表(指定資料表的php路徑)
+
+        php artisan migrate --path=/database/migtations/2024_03_17_044156_create_posts_table.php
+
+### 創建假資料
+- 創建假資料用的php檔，檔名建議跟資料表名稱相關
+
+        php  artisan make:seeder PostSeeder
+
+    <p>在database>seeders資料夾中就產生檔案</p>
+
+![create_seeder](img/create_seeder.jpg)
+
+- 輸入要新增資料內容(迴圈產生10筆)
+
+
+        for ($i = 0; $i <= 10; $i++) {
+            DB::table('posts')->insert([
+                'title' => Str::random(20),
+                'description' => Str::random(30),
+                'status' => 1,
+                'Publish_date' => date('Y-m-d'),
+                'user_id' => 1,
+            ]);
+        }
+
+    ![fakeData](img/fakeData.jpg)
+
+- 在DatabaseSeeder.php新增呼叫
+
+        $this->call(PostSeeder::class);
+
+    ![callSeeder](img/callSeeder.jpg)
+
+- 執行
+
+        php artisan db:seed
+
+    ![callSeederResult](img/callSeederResult.jpg)
+
+### Query builder
+- 在controller回傳DB搜尋結果
+
+    return DB::table('posts')->get();    //all data
+    return DB::table('posts')->find(7);  //id=7
+    return DB::table('posts')->first(); //第一筆
+    // 只搜尋最多2個欄位(相同資料只會有一筆)
+    return DB::table('posts')->pluck('id', 'title', 'user_id');
+    return DB::table('posts')->where('id', '>', 3)->where('id', '<', 8)->get();
+
+    ![callSeederResult](img/controller_get.jpg)
+
+- insert 
+
+        DB::table('posts')->insert([
+            [
+                'title' => 'This is one',
+                'description' => 'des 1',
+                'status' => 1,
+                'Publish_date' => date('Y-m-d'),
+                'user_id' => 1
+            ],
+            [
+                'title' => 'This is two',
+                'description' => 'des 2',
+                'status' => 0,
+                'Publish_date' => date('Y-m-d'),
+                'user_id' => 2
+            ]
+        ]);
+
+- update
+
+        DB::table('posts')->where('id', 12)->update([
+            'title' => 'This is one updated',
+            'description' => 'des 1 updated'
+        ]);
+
+- delete
+
+        DB::table('posts')->where('id', 12)->delete();
+
+- join
+
+    ![categories_tb](img/categories_tb.jpg)
+
+    ![posts_tb](img/posts_tb.jpg)
+
+    <p>搜尋條件[posts]的category_id=[categories]的id，兩個資料表全部欄位</p>
+
+        return DB::table('posts')->join('categories', 'posts.category_id', '=', 'categories.id')
+            ->get();
+
+    ![join_result01](img/join_result01.jpg)
+
+    <p>只要顯示categories的欄位</p>
+
+        return DB::table('posts')->join('categories', 'posts.category_id', '=', 'categories.id')
+            ->select('categories.*')
+            ->get();
+
+    ![posts_tb](img/join_result02.jpg)
+
+- 使用聚集Aggregates
+
+    <p>得到資料筆數</p>
+
+        return DB::table('posts')->count();
+
+    <p>欄位內容總和</p>
+
+        return DB::table('posts')->sum('id');
