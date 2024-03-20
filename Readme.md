@@ -21,11 +21,11 @@
 
 <p>Laragon點擊下方Terminal輸入</p>
 
-    install Laravel tool : Enter "composer global require laravel/installer"
+    composer global require laravel/installer
 
-<p>再輸入</p>
+<p>創建專案就再輸入</p>
 
-    create new Project: Enter "laravel new [Project_Name]"
+    laravel new [Project_Name]
 
 ## open project
 <p>Laragon中點右鍵>www，可看到所有建立的專案</p>
