@@ -21,11 +21,11 @@
 
 <p>Laragon點擊下方Terminal輸入</p>
 
-    install Laravel tool : Enter "composer global require laravel/installer"
+    composer global require laravel/installer
 
 <p>再輸入</p>
 
-    create new Project: Enter "laravel new [Project_Name]"
+    laravel new [Project_Name]
 
 ## open project
 <p>Laragon中點右鍵>www，可看到所有建立的專案</p>
@@ -182,7 +182,10 @@
 
 <p>URL輸入"http://localhost/about"即可進入</p>
 
-<p>檔案名稱的blade是讓laravel可以在HTML中使用Laravel功能，純PHP若要在PHP中使用PHP語法要加上<?php>，這個Blade可以用"@"開頭來表示此段是寫laravel語法，像是"@if".</p>
+<p>檔案名稱的blade是讓laravel可以在HTML中使用Laravel功能，純PHP若要在PHP中使用PHP語法要加上
+
+    <?php>
+這個Blade可以用"@"開頭來表示此段是寫laravel語法，像是"@if".</p>
 
 ### 網頁放在資料夾中
 <p>假設在[Views]中新增一個[contant]資料夾，裡面有一個index.blade.php網頁的呼叫方式如下</p>
@@ -420,12 +423,12 @@
     Route::post('/login', [LoginCon troller::class, 'handleLogin'])->name('login.sumbit');
 
 ### app>Http>Middleware>VerifyCsrfToken.php
-<p>要確認內容為空</p>
+<p>要確認內容為空，不然提交會有錯誤</p>
 
 ![進入專案](img/VerifyCsrfTokenEmpty.jpg)
 
 ## Form驗證Validation
-### 提交內容加validate
+### LoginController提交內容加validate
 
     public function handleLogin(Request $req)
     {
@@ -514,7 +517,7 @@
             }
         }
 
-    <p>LoginController.php內容如下
+    <p>LoginController.php內容變成如下
 
         namespace App\Http\Controllers;
 
