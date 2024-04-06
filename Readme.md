@@ -566,7 +566,7 @@
 
     php artisan make:migration create_posts_table
 
-    <p>須以'create_'開頭，'_table'結束，忠鈿建議定義負數名稱(+s)
+<p>須以'create_'開頭，'_table'結束，忠鈿建議定義負數名稱(+s)
 
 - 可在database>migrations資料夾下看到新建的table.php
 
@@ -751,3 +751,99 @@
     <p>欄位內容總和</p>
 
         return DB::table('posts')->sum('id');
+
+### Eloquent ORM
+- Eloquent
+    <p>Laravel中的一種類別</p>
+- ORM
+    <p>用物件導向的方式操作DB
+- Model
+    <p>Model基本上是用來跟DB交換資料</p>
+- 透過Artisan創建Model
+    <p>範例使用Post當成玉創建的Model名稱(資料表名稱為複數posts，建議命名成資料表的單數，這樣就有符合Laravel的規則他就知道要找哪個table)</p>
+
+        php artisan make:model Post
+
+    <p>產生後的基本內容-繼承Model</p>
+
+    ![model-basic](img/model-basic.jpg)
+
+    <p>舉例在HomeController要取得posts table所有內容</p>
+
+    ![model-homeCtrl](img/model-homeCtrl.jpg)
+
+    <p>Home網頁結果</p>
+
+    ![model-basic-result](img/model-basic-result.jpg)
+
+    <p>改成不是table名稱的單數的Model</p>
+
+    ![model-another_name](img/model-another_name.jpg)
+
+    <p>開啟home網頁可以從錯誤中看到他會找model名稱的複數名的table</p>
+
+    ![model_name_error](img/model_name_error.jpg)
+
+    <p>在Model內指定table名稱即可</p>
+
+        protected $table = 'posts';
+
+    ![model-specifyName](img/model-specifyName.jpg)
+
+### 幾個透過Eloquect ORM設定資料的方法
+- 指定某個id的資料或是使用foreach顯示資料
+    ![ORM_queryEX1](img/ORM_queryEX1.jpg)
+
+- 使用Where加上複數and, or條件顯示資料
+    ![ORM_Where_And_Or](img/ORM_Where_And_Or.jpg)
+
+- 使用insert範例
+    ![ORM_insert](img/ORM_insert.jpg)
+
+- update範例
+
+        // 用get()會回傳陣列會失敗，所以要用first()
+        $Post = myPost::where('user_id', '=', 2)->first();  
+        $Post->title = 'this is new three';
+        $Post->description = 'this is new three desc';
+        $Post->user_id = 3;
+        $Post->save();  //執行
+        dd('success');  //執行後訊息
+
+- delete範例
+
+        $Post = myPost::where('user_id', 9999)->delete();
+
+### 設定批量分配Mass Assignment
+<p>定義允許或不允許修改的資料表欄位避免程式漏洞</p>
+
+- 在所屬Model中定義
+
+    ![Mass_Assignment](img/Mass_Assignment.jpg)
+
+- 如果沒定義fillable
+
+    ![Mass_Assignment_noDefind](img/Mass_Assignment_noDefind.jpg)
+
+- 若修改保護的欄位出現的錯誤
+
+    ![Mass_Assignment_guarded](img/Mass_Assignment_guarded.jpg)
+
+- Insert範例
+
+        $post = myPost::create([
+            'title' => 'this is title from Mass assign 02',
+            'description' => 'this is description from Mass assign 01',
+            'status' => 0,
+            'Publish_date' => date('Y-m-d'),
+            'user_id' => 1,
+            'category_id' => 11,
+        ]);
+        dd('success');
+
+- update範例
+
+        $post = myPost::where('status', 1)->update([
+            'status' => 0
+        ]);
+        dd('success');
