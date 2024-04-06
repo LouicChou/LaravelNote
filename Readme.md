@@ -23,7 +23,7 @@
 
     composer global require laravel/installer
 
-<p>再輸入</p>
+<p>創建專案就再輸入</p>
 
     laravel new [Project_Name]
 
