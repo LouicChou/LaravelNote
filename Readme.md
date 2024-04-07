@@ -15,10 +15,10 @@ Build Multi Vendor Ecommerce Website (2023)
 * [Database](#database)
     * [建立資料庫](#建立migration檔案建立資料庫)
 * [Eloquent-ORM](#eloquent-orm)
+    * [透過artisan創建model](#透過artisan創建model)
     * [批量分配Mass-Assignment](#設定批量分配mass-assignment)
     * [製作假資料factory](#factory)
 
-# 環境建置
 # 環境建置
 
 ## 切換PHP版本
@@ -90,7 +90,6 @@ Build Multi Vendor Ecommerce Website (2023)
 - "php artisan route:list" - 顯示所有應用程式的路由列表
 - "php artisan tinker" - 進入php的即時運算功能，像是輸入"7 == "7"",會得到Ture的結果，輸入"strlen("ABCDE")"會得到5，可用來在網站運行中創建假數據測試之類的
 
-## Terminal指令
 ### 查看所有Route
 
     php artisan route:list
@@ -631,6 +630,7 @@ Build Multi Vendor Ecommerce Website (2023)
         $table->double('double')->default(0); // 預設值
         $table->float('float');
         $table->integer('integer');
+        $table->timestamp('email_verified');
 
 ## 更多migration命令
 - 重置現有的資料庫(刪除所有資料表只剩下資料表migrations)
@@ -789,36 +789,36 @@ Build Multi Vendor Ecommerce Website (2023)
     <p>用物件導向的方式操作DB
 - Model
     <p>Model基本上是用來跟DB交換資料</p>
-- 透過Artisan創建Model
-    <p>範例使用Post當成玉創建的Model名稱(資料表名稱為複數posts，建議命名成資料表的單數，這樣就有符合Laravel的規則他就知道要找哪個table)</p>
+## 透過Artisan創建Model
+<p>範例使用Post當成預創建的Model名稱(資料表名稱為複數posts，建議命名成資料表的單數，這樣就有符合Laravel的規則他就知道要找哪個table)</p>
 
-        php artisan make:model Post
+    php artisan make:model Post
 
-    <p>產生後的基本內容-繼承Model</p>
+<p>產生後的基本內容-繼承Model</p>
 
-    ![model-basic](img/model-basic.jpg)
+![model-basic](img/model-basic.jpg)
 
-    <p>舉例在HomeController要取得posts table所有內容</p>
+<p>舉例在HomeController要取得posts table所有內容</p>
 
-    ![model-homeCtrl](img/model-homeCtrl.jpg)
+![model-homeCtrl](img/model-homeCtrl.jpg)
 
-    <p>Home網頁結果</p>
+<p>Home網頁結果</p>
 
-    ![model-basic-result](img/model-basic-result.jpg)
+![model-basic-result](img/model-basic-result.jpg)
 
-    <p>改成不是table名稱的單數的Model</p>
+<p>改成不是table名稱的單數的Model</p>
 
-    ![model-another_name](img/model-another_name.jpg)
+![model-another_name](img/model-another_name.jpg)
 
-    <p>開啟home網頁可以從錯誤中看到他會找model名稱的複數名的table</p>
+<p>開啟home網頁可以從錯誤中看到他會找model名稱的複數名的table</p>
 
-    ![model_name_error](img/model_name_error.jpg)
+![model_name_error](img/model_name_error.jpg)
 
-    <p>在Model內指定table名稱即可</p>
+<p>在Model內指定table名稱即可</p>
 
-        protected $table = 'posts';
+    protected $table = 'posts';
 
-    ![model-specifyName](img/model-specifyName.jpg)
+![model-specifyName](img/model-specifyName.jpg)
 
 ## 幾個透過Eloquect ORM設定資料的方法
 - 指定某個id的資料或是使用foreach顯示資料
@@ -966,3 +966,8 @@ Build Multi Vendor Ecommerce Website (2023)
 <p>migrations資料夾內的檔案將決定fresh後的欄位內容!!</p>
 
     php artisan migrate:fresh
+
+# Eloquent 關聯資料表
+
+## 兩個資料表互相關聯
+- 使用address跟users資料表顯示在user.blade.php
