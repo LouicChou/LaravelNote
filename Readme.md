@@ -1,22 +1,34 @@
-# Build Multi Vendor Ecommerce Website (2023)
+Build Multi Vendor Ecommerce Website (2023)
+===
 
 <p>Use Laragon be host. </p>
 <p>Laragon是整合Apache跟mysql的服務程式，方便開發PHP程式</p>
 
-## Change PHP Version
+* [環境建置](##環境建置)
+    * [切換PHP版本](##V切換PHP版本)
+    * [VS Code useful extension](##VS_Laravel_extension)
+    * [安裝Laravel](##安裝Laravel)
+    * [open_project](##open_project)
+    * [切換預設網站](##切換預設網站)
+    * [folder_structure](##folder_structure)
+* [artisan](##artisan)
+
+# 環境建置
+## 切換PHP版本
+
 <p>PHP版本下載: https://windows.php.net/downloads/releases/</p>
 <p>將要換的PHP版本程式解壓縮後放在C:\laragon\bin\php之下，
 在Laragon程式中點右鍵>PHP，即可切換版本</p>
 
 
-## VS Code useful extension
+## VS_Laravel_extension
 - Laravel Extension pack(整合包)
 
     Uninstall - EditConfig for vscode, Laravel Create view, Laravel Blade wrapper
 
 - One Dark Pro
 
-## Install Laravel
+## 安裝Laravel
 <a href='https://laravel.com/docs/10.x/installation'>Install Laravel</a>
 
 <p>Laragon點擊下方Terminal輸入</p>
@@ -27,13 +39,13 @@
 
     laravel new [Project_Name]
 
-## open project
+## open_project
 <p>Laragon中點右鍵>www，可看到所有建立的專案</p>
 
 ## 切換預設網站
 <p>Laragon中點右鍵>第二個項目>Switch Document Root>Select another，選到index網頁的那個路徑，像是Laravel專案就是選[Public]資料夾</p>
 
-## folder structure
+## folder_structure
 - [app]
     - [http]    
         - [Controllers]
@@ -70,7 +82,8 @@
 - "php artisan route:list" - 顯示所有應用程式的路由列表
 - "php artisan tinker" - 進入php的即時運算功能，像是輸入"7 == "7"",會得到Ture的結果，輸入"strlen("ABCDE")"會得到5，可用來在網站運行中創建假數據測試之類的
 
-## Terminal指令
+Terminal指令
+===
 ### 查看所有Route
 
     php artisan route:list
@@ -847,3 +860,31 @@
             'status' => 0
         ]);
         dd('success');
+
+### 軟刪除softDeletes
+- 在此資料表的Model引用SoftDeletes
+
+    ![softDeletes_model](img/softDeletes_model.jpg)
+
+- 將要增加軟刪除的資料表新增欄位-使用Migrate方式
+
+        php artisan make:migration add_posts_table --table=posts
+
+    ![softDeletes_Migrate_ss](img/softDeletes_Migrate_ss.jpg)
+
+- 在up()加上
+
+        $table->softDeletes();
+
+- 在down()加上
+
+        $table->dropSoftDeletes();;        
+
+    ![softDeletes_Migrate](img/softDeletes_Migrate.jpg)
+
+- 執行修改好的migrate檔案
+
+        php artisan migrate --path=/database/migrations/2024_04_07_031406_add_posts_table.php
+
+    ![softDeletes_Migrate_exc](img/softDeletes_Migrate_exc.jpg)
+
