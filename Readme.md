@@ -18,6 +18,7 @@ Build Multi Vendor Ecommerce Website (2023)
     * [透過artisan創建model](#透過artisan創建model)
     * [批量分配Mass-Assignment](#設定批量分配mass-assignment)
     * [製作假資料factory](#factory)
+* [Eloquent關聯資料表](#eloquent關聯資料表)
 
 # 環境建置
 
@@ -449,6 +450,7 @@ Build Multi Vendor Ecommerce Website (2023)
 ![進入專案](img/VerifyCsrfTokenEmpty.jpg)
 
 ## Form驗證Validation
+[Back Menu](#目錄)
 ### LoginController提交內容加validate
 
     public function handleLogin(Request $req)
@@ -967,7 +969,69 @@ Build Multi Vendor Ecommerce Website (2023)
 
     php artisan migrate:fresh
 
-# Eloquent 關聯資料表
-
+# Eloquent關聯資料表
+[Back Menu](#目錄)
 ## 兩個資料表互相關聯
-- 使用address跟users資料表顯示在user.blade.php
+- 使用資料表users的欄位id去關聯資料表addresses的欄位u_id顯示在user.blade.php
+- 資料表users資料表有欄位id
+
+    ![users_db_id](img/users_db_id.jpg)
+
+- 資料表addresses資料表有欄位u_id
+
+    ![addresses_db_uid](img/addresses_db_uid.jpg)
+
+- 在UserController取得users資料
+
+    ![UserController_getUsers](img/UserController_getUsers.jpg)
+
+- 在User的Model關聯address的model
+
+    ![User_Model](img/User_Model.jpg)
+
+- 在User的View帶入內容
+
+        @foreach ($users as $user)
+            <div class="col-md-3">
+                <div class="card mb-5">
+                    <div class="card-body">
+                        <h4>{{ $user->name }}</h4>
+                        <p>{{ $user->email }}</p>
+                        <p>{{ $user->address }}</p>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    
+    ![User_view01](img/User_view01.jpg)
+
+- 結果
+
+    ![User_Result01](img/User_Result01.jpg)
+
+- 在User的View改成只要address
+
+        <p>{{ $user->address->address }}</p>
+    
+    ![User_view](img/User_view.jpg)
+
+- 結果
+
+    ![User_Result02](img/User_Result02.jpg)
+
+## 反向關聯
+- 在Address的Model反向關聯User的model
+
+    ![Address_model](img/Address_model.jpg)
+
+- 在Controller改成引入資料表addesses
+
+    ![UserController_getAddresses](img/UserController_getAddresses.jpg)
+
+- 在view中改成迴圈帶入addresses資料
+
+    ![User_view03](img/User_view03.jpg)
+
+- 結果
+    
+    ![User_Result03](img/User_Result03.jpg)
