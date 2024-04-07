@@ -4,18 +4,24 @@ Build Multi Vendor Ecommerce Website (2023)
 <p>Use Laragon be host. </p>
 <p>Laragon是整合Apache跟mysql的服務程式，方便開發PHP程式</p>
 
-* [環境建置](##環境建置)
-    * [切換PHP版本](##V切換PHP版本)
-    * [VS Code useful extension](##VS_Laravel_extension)
-    * [安裝Laravel](##安裝Laravel)
-    * [open_project](##open_project)
-    * [切換預設網站](##切換預設網站)
-    * [folder_structure](##folder_structure)
-* [artisan](##artisan)
+# 目錄
+* [環境建置](#環境建置)
+* [artisan](#artisan)
+* [Routes](#routes)
+* [View](#view)
+* [Controller](#controller)
+    * [form use token](#表單提交use-token使用csrf)
+    * [form驗證](#form驗證validation)
+* [Database](#database)
+    * [建立資料庫](#建立migration檔案建立資料庫)
+* [Eloquent-ORM](#eloquent-orm)
+    * [批量分配Mass-Assignment](#設定批量分配mass-assignment)
+    * [製作假資料factory](#factory)
 
 # 環境建置
-## 切換PHP版本
+# 環境建置
 
+## 切換PHP版本
 <p>PHP版本下載: https://windows.php.net/downloads/releases/</p>
 <p>將要換的PHP版本程式解壓縮後放在C:\laragon\bin\php之下，
 在Laragon程式中點右鍵>PHP，即可切換版本</p>
@@ -28,7 +34,8 @@ Build Multi Vendor Ecommerce Website (2023)
 
 - One Dark Pro
 
-## 安裝Laravel
+安裝Laravel
+---
 <a href='https://laravel.com/docs/10.x/installation'>Install Laravel</a>
 
 <p>Laragon點擊下方Terminal輸入</p>
@@ -73,8 +80,9 @@ Build Multi Vendor Ecommerce Website (2023)
 - composer.json - 所有庫之間關係的內容
 - package.json - 有安裝的NPM會在這
 
-## artisan
-查看artisan命令 - 在Cmder(terminal)輸入"php artisan"
+# artisan
+[Back Menu](#目錄)
+<p>查看artisan命令 - 在Cmder(terminal)輸入"php artisan"</p>
 
 常用命令:
 - "php artisan serve" - 查看laragon伺服器的狀態與ip跟port，8000是laragon的預設PORT
@@ -82,8 +90,7 @@ Build Multi Vendor Ecommerce Website (2023)
 - "php artisan route:list" - 顯示所有應用程式的路由列表
 - "php artisan tinker" - 進入php的即時運算功能，像是輸入"7 == "7"",會得到Ture的結果，輸入"strlen("ABCDE")"會得到5，可用來在網站運行中創建假數據測試之類的
 
-Terminal指令
-===
+## Terminal指令
 ### 查看所有Route
 
     php artisan route:list
@@ -100,8 +107,8 @@ Terminal指令
 
     C:\\laragon\\bin\\php\\php-8.1.10-Win32-vs16-x64\\php.exe"
 
-## Routes
-
+# Routes
+[Back Menu](#目錄)
 <p>在[routes]>web.php中定義</p>
 
 ### 基本語法為`Route::get(URL,方法);`
@@ -177,7 +184,8 @@ Terminal指令
     });
 <p>此段一定要放在web.php的最下面才會生效</p>
 
-## View
+# View
+[Back Menu](#目錄)
 <p>給使用者看的網頁都會放在[resouces]>[views]裡</p>
 
 <p>routes預設語法</p>
@@ -361,8 +369,9 @@ Terminal指令
 
 ![迴圈條件](img/foreachCondition.jpg)
 
-## Controller
-### Create controller
+# Controller
+[Back Menu](#目錄)
+## Create controller
 <p>開啟Terminal後進入專案路徑
 
 ![開啟Termital](img/openTerminal.jpg)
@@ -549,7 +558,8 @@ Terminal指令
             }
         }
 
-## Database
+# Database
+[Back Menu](#目錄)
 - config>database.php中預設是使用mysql
 
     ![database_default](img/database_default.jpg)
@@ -558,7 +568,7 @@ Terminal指令
 
     ![db_connection](img/db_conntection.jpg)
 
-### 建立實例
+## 建立實例
 - Terminal輸入
 
     php artisan tinker
@@ -572,9 +582,10 @@ Terminal指令
 
     ![getPDO](img/getPDO.jpg)
 
-### 建立Migration檔案方便遷移資料庫
+## 建立Migration檔案建立資料庫
+<p>方便讓有專案的人可以快速建立相同的資料庫</p>
 
-### 範例建立posts資料表(僅創php檔)
+## 範例建立posts資料表(僅創php檔)
 - Terminal輸入
 
     php artisan make:migration create_posts_table
@@ -621,7 +632,7 @@ Terminal指令
         $table->float('float');
         $table->integer('integer');
 
-### 更多migration命令
+## 更多migration命令
 - 重置現有的資料庫(刪除所有資料表只剩下資料表migrations)
 
         php artisan migrate:reset
@@ -656,7 +667,12 @@ Terminal指令
 
         php artisan migrate --path=/database/migtations/2024_03_17_044156_create_posts_table.php
 
-### 創建假資料
+- <font color=#FF0000>**刪除所有資料**</font>
+    <p>migrations資料夾裡的檔案都會執行，若欄位有減少，要查相同資料表名稱的檔案</p>
+
+        php artisan migrate:fresh
+
+## 創建假資料
 - 創建假資料用的php檔，檔名建議跟資料表名稱相關
 
         php  artisan make:seeder PostSeeder
@@ -692,7 +708,7 @@ Terminal指令
 
     ![callSeederResult](img/callSeederResult.jpg)
 
-### Query builder
+## Query builder
 - 在controller回傳DB搜尋結果
 
     return DB::table('posts')->get();    //all data
@@ -765,7 +781,8 @@ Terminal指令
 
         return DB::table('posts')->sum('id');
 
-### Eloquent ORM
+# Eloquent ORM
+[Back Menu](#目錄)
 - Eloquent
     <p>Laravel中的一種類別</p>
 - ORM
@@ -803,7 +820,7 @@ Terminal指令
 
     ![model-specifyName](img/model-specifyName.jpg)
 
-### 幾個透過Eloquect ORM設定資料的方法
+## 幾個透過Eloquect ORM設定資料的方法
 - 指定某個id的資料或是使用foreach顯示資料
     ![ORM_queryEX1](img/ORM_queryEX1.jpg)
 
@@ -827,7 +844,7 @@ Terminal指令
 
         $Post = myPost::where('user_id', 9999)->delete();
 
-### 設定批量分配Mass Assignment
+## 設定批量分配Mass Assignment
 <p>定義允許或不允許修改的資料表欄位避免程式漏洞</p>
 
 - 在所屬Model中定義
@@ -861,7 +878,9 @@ Terminal指令
         ]);
         dd('success');
 
-### 軟刪除softDeletes
+## 軟刪除softDeletes(only for Eloquent ORM)
+<p>執行這個步驟後，該資料表會出現一個deleted_at的欄位，使用Laravel的Delete()方法刪除這個資料表的資料後，只會在該筆資料的deleted_at欄位出現一個日期，之後使用Laravel的方法搜尋這個資料表時將不會出現deleted_at欄位有內容的資料</p
+>
 - 在此資料表的Model引用SoftDeletes
 
     ![softDeletes_model](img/softDeletes_model.jpg)
@@ -888,3 +907,62 @@ Terminal指令
 
     ![softDeletes_Migrate_exc](img/softDeletes_Migrate_exc.jpg)
 
+- db出現欄位deleted_at
+
+    ![softDeletes_db](img/softDeletes_db.jpg)
+
+### 搜尋軟刪除的資料
+
+    return myPost::onlyTrashed()->get();
+
+### 恢復軟刪除的資料(deleted_at內容變成null)
+
+    myPost::withtrashed()->find(id)->restore();
+
+### 永遠刪除資料(deleted_at已有內容)
+
+    myPost::withtrashed()->find(id)->forceDelete();
+
+## Factory
+[Back Menu](#目錄)
+<p>用來製作資料表的假資料</p>
+
+### 創建名為myPostFactory的factory
+<p>myPost為model的名稱!!</p>
+
+    php artisan make:factory myPostFactory
+
+<p>出現factories資料夾跟內容</p>
+
+![factory_create](img/factory_create.jpg)
+
+### 輸入要產生假資料的欄位
+
+    return [
+            'title' => fake()->sentence(),
+            'description' => fake()->paragraph(),
+            'status' => rand(0, 1),
+            'Publish_date' => fake()->date(),
+            'user_id' => 1,
+            'category_id' => rand(1, 4)
+        ];
+
+![factory_data](img/factory_data.jpg)
+
+### 註冊[seeders]>[DatabaseSeeder]
+<p>創建兩百筆資料</p>
+
+    myPost::factory(200)->create();
+
+![factory_seeder](img/factory_seeder.jpg)
+
+### 執行
+
+    php artisan db:seed
+
+![factory_db_data](img/factory_db_data.jpg)
+
+### 若資料想換掉可執行fresh將所有資料刪除
+<p>migrations資料夾內的檔案將決定fresh後的欄位內容!!</p>
+
+    php artisan migrate:fresh
