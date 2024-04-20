@@ -19,6 +19,8 @@ Build Multi Vendor Ecommerce Website (2023)
     * [批量分配Mass-Assignment](#設定批量分配mass-assignment)
     * [製作假資料factory](#factory)
 * [Eloquent關聯資料表](#eloquent關聯資料表)
+    * [1對1互相關聯](#1對1兩個資料表互相關聯)
+    * [反相關聯](#反相關聯)
 
 # 環境建置
 
@@ -105,7 +107,7 @@ Build Multi Vendor Ecommerce Website (2023)
 
 <p>ex:</p>
 
-    C:\\laragon\\bin\\php\\php-8.1.10-Win32-vs16-x64\\php.exe"
+    C:\\laragon\\bin\\php\\php-8.1.10-Win32-vs16-x64\\php.exe
 
 # Routes
 [Back Menu](#目錄)
@@ -684,6 +686,7 @@ Build Multi Vendor Ecommerce Website (2023)
 ![create_seeder](img/create_seeder.jpg)
 
 - 輸入要新增資料內容(迴圈產生10筆)
+    <p>要有建立Model程式碼才會過</p>
 
 
         for ($i = 0; $i <= 10; $i++) {
@@ -788,7 +791,7 @@ Build Multi Vendor Ecommerce Website (2023)
 - Eloquent
     <p>Laravel中的一種類別</p>
 - ORM
-    <p>用物件導向的方式操作DB
+    <>用物件導向的方式操作DB
 - Model
     <p>Model基本上是用來跟DB交換資料</p>
 ## 透過Artisan創建Model
@@ -821,6 +824,12 @@ Build Multi Vendor Ecommerce Website (2023)
     protected $table = 'posts';
 
 ![model-specifyName](img/model-specifyName.jpg)
+
+<p>筆記 : 建立Model時一起建立migration create</p>
+
+    php artisan make:model Tag -m
+
+![MakeModelAndMigration](img/MakeModelAndMigration.jpg)
 
 ## 幾個透過Eloquect ORM設定資料的方法
 - 指定某個id的資料或是使用foreach顯示資料
@@ -971,8 +980,14 @@ Build Multi Vendor Ecommerce Website (2023)
 
 # Eloquent關聯資料表
 [Back Menu](#目錄)
-## 兩個資料表互相關聯
-- 使用資料表users的欄位id去關聯資料表addresses的欄位u_id顯示在user.blade.php
+
+<p>重點:若有資料表要互相關聯，子資料表名稱命名為複數名詞，主資料表的欄位以子資料表單數名詞 + "_id"，就可發揮關聯功能‧，若沒有遵守就要在has或belong的參數加入詳細從屬資訊(命名照規則就只需輸入$related內容)</p>
+
+![hasManyPara](img/hasManyPara.jpg)
+
+
+## 1對1兩個資料表互相關聯
+- 使用資料表users的欄位id去關聯資料表addresses的欄位u_id顯示在user.blade.php > hasOne()
 - 資料表users資料表有欄位id
 
     ![users_db_id](img/users_db_id.jpg)
@@ -1019,8 +1034,8 @@ Build Multi Vendor Ecommerce Website (2023)
 
     ![User_Result02](img/User_Result02.jpg)
 
-## 反向關聯
-- 在Address的Model反向關聯User的model
+## 反相關聯
+- 在Address的Model反向關聯User的model > belongsTo()
 
     ![Address_model](img/Address_model.jpg)
 
@@ -1035,3 +1050,35 @@ Build Multi Vendor Ecommerce Website (2023)
 - 結果
     
     ![User_Result03](img/User_Result03.jpg)
+
+## 1對多關聯
+
+- 使用資料表catagories的欄位id去關聯資料表posts的欄位category_id顯示在user.blade.php > hasMany()
+
+- 在Model Category定義跟posts的Model(myPost)多關聯
+
+    ![Model](img/Model-Category.jpg)
+
+- 在Model myPost定義屬於Category
+
+    ![Model-myPost](img/Model-myPost.jpg)
+
+- view中定義回傳資料為資料表posts的欄位category_id (因為另一個資料表名稱為categories，所以會自動去找這個資料表的欄位id來對應) 為1的，並且將category_id的內容用資料表categories的name代替(categories只有name一個欄位)
+
+    ![UserController_hasMany](img/UserController_hasMany.jpg)
+
+- 資料表categories
+
+    ![table_categories](img/table_categories.jpg)
+
+- 資料表posts
+
+    ![table_posts](img/table_posts.jpg)
+
+- view
+
+    ![view-hasMany](img/view-hasMany.jpg)
+
+- result
+
+    ![view-hasMany](img/result-hasMany.jpg)
