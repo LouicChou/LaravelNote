@@ -1053,32 +1053,97 @@ Build Multi Vendor Ecommerce Website (2023)
 
 ## 1對多關聯
 
+- 將資料表posts裡每筆資料的category_id都跟資料表categories的某一筆資料相關聯
+
 - 使用資料表catagories的欄位id去關聯資料表posts的欄位category_id顯示在user.blade.php > hasMany()
 
-- 在Model Category定義跟posts的Model(myPost)多關聯
+- 在Model Category定義跟posts的Model(myPost)關聯多筆資料
 
     ![Model](img/Model-Category.jpg)
 
-- 在Model myPost定義屬於Category
+- 在Model myPost定義屬於Category (由於有照命名規則，所以此處表示posts的欄位category_id的內容假設為1，將替換為資料表categroies內id為1的欄位name內容)
 
     ![Model-myPost](img/Model-myPost.jpg)
 
-- view中定義回傳資料為資料表posts的欄位category_id (因為另一個資料表名稱為categories，所以會自動去找這個資料表的欄位id來對應) 為1的，並且將category_id的內容用資料表categories的name代替(categories只有name一個欄位)
+- Controller中定義回傳從資料表posts的欄位category_id為1的資料 ，因為category的Model有定義category有關連posts的多筆資料所以寫法是用
+
+        $categories = Category::find(1)->posts;
 
     ![UserController_hasMany](img/UserController_hasMany.jpg)
 
-- 資料表categories
+- 資料表categories中id為1的內容是Olson
 
     ![table_categories](img/table_categories.jpg)
 
-- 資料表posts
+- 資料表posts的category_id有1~4的資料
 
     ![table_posts](img/table_posts.jpg)
 
-- view
+- view設計category_id的內容用資料表categories的name代替
 
     ![view-hasMany](img/view-hasMany.jpg)
 
-- result
+- 只顯示catagory_id的資料，並秀出所屬的categories的name
 
     ![view-hasMany](img/result-hasMany.jpg)
+
+## 多對多關聯
+
+- 一個資料表內的多筆資料跟另一個資料表的多筆資料相關聯
+
+- 建立一個資料表post_tag，用來將資料表posts(發文內容)的資料加上標籤tag，以便可以看到posts的每筆資料的tag有哪些(類似臉書的標註#)
+
+   ![post_tag](img/table_post_tag.jpg)
+
+- 建立一個資料表tags，只有一個欄位name，輸入四筆資料
+
+   ![tags](img/table_tags.jpg)
+
+- 在posts的Model加入tags的方法，設定Tags的資料跟posts的資料多關聯
+
+   ![tags](img/Model-myPost_belongToMany.jpg)
+
+
+- 新增一筆資料到資料表post_tag，表示將posts的第一筆資料加上tags的第一筆資料，表示posts的第一筆資料的標籤"php"
+
+   ![tags](img/add_post_tag_first.jpg)
+
+- 進入網頁後，會是一片空白
+
+   ![exec_PostTag](img/exec_PostTag.jpg)
+
+- 資料表post_tag會多一筆資料
+
+   ![tags](img/add_post_tag_first_result.jpg)
+
+- 查看post的第一筆資料並且加上關聯的標籤tag
+
+    ![postsWithTagsFirst](img/postsWithTagsFirst.jpg)
+
+- 結果
+
+    ![result_postsWithTagsFirst](img/result_postsWithTagsFirst.jpg)
+
+- 要將posts的第一筆資料變成跟tags的四筆資料都相關聯，先寫入對應關係到資料表post_tag
+
+    ![add_post_tag_234](img/add_post_tag_234.jpg)
+
+- 瀏覽器重整http://localhost/PostTag之後，資料表多出3筆資料，表示posts的第一筆資料有4個標籤
+
+    ![add_post_tag_234](img/table_post_tag_4.jpg)
+
+- 再次查看post的第一筆資料並且加上關聯的標籤tag
+
+    ![postsWithTagsFirst](img/result_postsWithTags_4.jpg)
+
+- 修改controller取得目前的posts的第一筆資料關聯tags資料
+
+    ![controller_PostTag_get](img/controller_PostTag_get.jpg)
+
+- 修改PostTag的View，顯示posts的tltie跟description資料，並且加上此筆資料的tag有哪些
+
+    ![view_PostTag](img/view_PostTag.jpg)
+
+- 加上標籤tag後的結果
+
+    ![view_PostTag](img/result_postsWithTags_get.jpg)
